@@ -3,10 +3,9 @@ import { load } from '@pspdfkit/nodejs'
 import fs from 'node:fs'
 import randomBytes from 'node:crypto'
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
-  const { name = 'World' } = req.query
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const name = await convertToPDF()
 
-  convertToPDF();
   return res.json({
     message: `Hello ${name}!`,
   })
@@ -23,8 +22,13 @@ async function convertToPDF() {
   // @ts-ignore
   const name = `converted-${randomBytes(8).toString('hex')}.pdf`
   // @ts-ignore
-  fs.writeFileSync(name, Buffer.from(buffer));
+  const file = fs.createWriteStream(name, Buffer.from(buffer));
+  file.on("finish", () => {
+    file.close();
+    console.log("Download Completed");
+  });
   await instance.close();
-};
+  return name
+}
 
 

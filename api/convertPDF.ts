@@ -14,7 +14,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 
 async function convertToPDF() {
-  const docx = fs.readFileSync('./sample.docx');
+  const docx = fs.readFileSync('sample.docx');
   const instance = await load({
     document: docx,
   });

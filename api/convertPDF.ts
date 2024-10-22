@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { load } from '@pspdfkit/nodejs'
 import fs from 'node:fs'
 import randomBytes from 'node:crypto'
+import path from 'node:path'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const name = await convertToPDF()
@@ -14,7 +15,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 
 async function convertToPDF() {
-  const docx = fs.readFileSync('sample.docx');
+  const docx = fs.readFileSync(path.join('sample.docx'));
   const instance = await load({
     document: docx,
   });
